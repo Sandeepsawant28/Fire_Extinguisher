@@ -81,9 +81,13 @@
 }
 
 .table-header {
-  @apply text-white/40 text-[10px] uppercase tracking-widest font-black py-4 px-4 text-left border-b border-white/5 bg-[#151515]/50;
+  @apply text-white/40 text-[9px] sm:text-[10px] uppercase tracking-widest font-black py-4 px-4 text-left border-b border-white/5 bg-[#151515]/50;
 }
 
 .table-cell {
-  @apply py-5 px-4 text-sm border-b border-white/5;
+  @apply py-4 sm:py-5 px-4 text-[13px] sm:text-sm border-b border-white/5;
+}
+
+.color-scheme-dark {
+  color-scheme: dark;
 }
