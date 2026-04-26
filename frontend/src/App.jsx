@@ -135,57 +135,57 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto font-sans">
+    <div className="min-h-screen p-3 sm:p-8 max-w-7xl mx-auto font-sans">
       {/* Header */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-12">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <div className="w-16 h-16 bg-red-600 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-[0_0_20px_rgba(220,38,38,0.4)]">
-            <Flame className="text-white w-10 h-10" fill="currentColor" />
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 sm:gap-8 mb-8 sm:mb-12">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-600 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+            <Flame className="text-white w-7 h-7 sm:w-10 sm:h-10" fill="currentColor" />
           </div>
           <div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase italic leading-none text-white selection:bg-red-500">
+            <h1 className="text-2xl sm:text-6xl font-black tracking-tighter uppercase italic leading-none text-white selection:bg-red-500">
               UNIFIRE REGISTRY
             </h1>
-            <p className="text-white/40 text-[9px] sm:text-[10px] tracking-[0.3em] mt-3 font-black uppercase">
+            <p className="text-white/40 text-[8px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] mt-1 sm:mt-3 font-black uppercase">
               DON BOSCO COLLEGE OF ENGINEERING, FATORDA, GOA
             </p>
           </div>
         </div>
-        <div className="w-full lg:w-auto bg-red-600 rounded-xl px-8 py-4 text-center shadow-[0_0_30px_rgba(220,38,38,0.2)]">
-          <div className="text-4xl font-black text-white italic leading-none">{stats.total}</div>
-          <div className="text-[9px] font-black text-white uppercase tracking-[0.2em] mt-2">Total Units Tracked</div>
+        <div className="w-full lg:w-auto bg-red-600 rounded-lg sm:rounded-xl px-6 sm:px-8 py-2 sm:py-4 text-center shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+          <div className="text-2xl sm:text-4xl font-black text-white italic leading-none">{stats.total}</div>
+          <div className="text-[8px] font-black text-white uppercase tracking-[0.1em] sm:tracking-[0.2em] mt-1">Units Tracked</div>
         </div>
       </header>
 
       {/* Alert Banner */}
       {(stats.overdue > 0 || stats.dueSoon > 0) && (
-        <div className="bg-red-950/10 border border-red-500/10 rounded-xl p-3 mb-10 flex items-start sm:items-center gap-3 text-red-500/60 text-[10px] font-black uppercase tracking-widest leading-relaxed">
-          <AlertTriangle size={14} className="text-red-500/80 flex-shrink-0" />
-          <span>{stats.overdue} units OVERDUE • {stats.dueSoon} due soon — Immediate attention required!</span>
+        <div className="bg-red-950/10 border border-red-500/10 rounded-xl p-3 mb-6 sm:mb-10 flex items-center gap-3 text-red-500/60 text-[9px] sm:text-[10px] font-black uppercase tracking-widest leading-relaxed">
+          <AlertTriangle size={12} className="text-red-500/80 flex-shrink-0" />
+          <span>{stats.overdue} OVERDUE • {stats.dueSoon} DUE SOON</span>
         </div>
       )}
 
       {/* Stats Dashboard */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
-        <div className="stat-card border-l-[3px] border-l-red-600">
-          <div className="text-white/40 text-[9px] uppercase font-black tracking-widest">Total Units</div>
-          <div className="text-4xl sm:text-5xl font-black italic text-red-500 my-1">{stats.total}</div>
-          <div className="text-white/40 text-[10px] font-bold">registered</div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-10">
+        <div className="stat-card border-l-2 border-l-red-600 p-3 sm:p-4">
+          <div className="text-white/40 text-[8px] uppercase font-black tracking-widest">Total</div>
+          <div className="text-3xl sm:text-5xl font-black italic text-red-500 my-0.5 sm:my-1">{stats.total}</div>
+          <div className="text-white/40 text-[9px] font-bold">registered</div>
         </div>
-        <div className="stat-card border-l-[3px] border-l-green-500">
-          <div className="text-white/40 text-[9px] uppercase font-black tracking-widest">Up to Date</div>
-          <div className="text-4xl sm:text-5xl font-black italic text-green-500 my-1">{stats.upToDate}</div>
-          <div className="text-white/40 text-[10px] font-bold">no action needed</div>
+        <div className="stat-card border-l-2 border-l-green-500 p-3 sm:p-4">
+          <div className="text-white/40 text-[8px] uppercase font-black tracking-widest">Safe</div>
+          <div className="text-3xl sm:text-5xl font-black italic text-green-500 my-0.5 sm:my-1">{stats.upToDate}</div>
+          <div className="text-white/40 text-[9px] font-bold">up to date</div>
         </div>
-        <div className="stat-card border-l-[3px] border-l-yellow-500">
-          <div className="text-white/40 text-[9px] uppercase font-black tracking-widest">Due Soon</div>
-          <div className="text-4xl sm:text-5xl font-black italic text-yellow-500 my-1">{stats.dueSoon}</div>
-          <div className="text-white/40 text-[10px] font-bold">within 3 months</div>
+        <div className="stat-card border-l-2 border-l-yellow-500 p-3 sm:p-4">
+          <div className="text-white/40 text-[8px] uppercase font-black tracking-widest">Soon</div>
+          <div className="text-3xl sm:text-5xl font-black italic text-yellow-500 my-0.5 sm:my-1">{stats.dueSoon}</div>
+          <div className="text-white/40 text-[9px] font-bold">due 3 mo</div>
         </div>
-        <div className="stat-card border-l-[3px] border-l-red-500/30">
-          <div className="text-white/40 text-[9px] uppercase font-black tracking-widest">Overdue</div>
-          <div className="text-4xl sm:text-5xl font-black italic text-red-400 my-1">{stats.overdue}</div>
-          <div className="text-white/40 text-[10px] font-bold">immediate action</div>
+        <div className="stat-card border-l-2 border-l-red-500/30 p-3 sm:p-4">
+          <div className="text-white/40 text-[8px] uppercase font-black tracking-widest">Late</div>
+          <div className="text-3xl sm:text-5xl font-black italic text-red-400 my-0.5 sm:my-1">{stats.overdue}</div>
+          <div className="text-white/40 text-[9px] font-bold">overdue</div>
         </div>
       </div>
 
