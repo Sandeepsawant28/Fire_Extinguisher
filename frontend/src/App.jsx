@@ -241,10 +241,10 @@ function App() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-[#121212] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
-        <div className="p-6 md:p-8 border-b border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#151515]">
-          <h2 className="text-xl md:text-2xl font-black italic uppercase flex items-center gap-3 text-red-600">
+      {/* Table View (Hidden on Mobile) */}
+      <div className="hidden lg:block bg-[#121212] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#151515]">
+          <h2 className="text-2xl font-black italic uppercase flex items-center gap-3 text-red-600">
             <Flame size={24} fill="currentColor" />
             Registry
           </h2>
@@ -306,7 +306,7 @@ function App() {
                     <div className="flex items-center justify-end gap-2">
                       <button onClick={() => handleRefill(item.id)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/5 text-green-500 border border-green-500/20 text-[9px] font-black uppercase tracking-widest hover:bg-green-500 hover:text-white transition-all group/btn">
                         <CheckCircle2 size={12} className="group-hover/btn:scale-110 transition-transform" />
-                        <span className="hidden sm:inline">Refilled</span>
+                        <span>Refilled</span>
                       </button>
                       <button onClick={() => openEditModal(item)} className="action-btn bg-blue-500/5 text-blue-400 border border-blue-400/20 hover:bg-blue-500 hover:text-white">
                         <Edit2 size={12} />
@@ -321,6 +321,67 @@ function App() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card View (Visible only on Mobile) */}
+      <div className="lg:hidden space-y-4">
+        <div className="flex justify-between items-center px-2 mb-4">
+          <h2 className="text-lg font-black italic uppercase text-red-600">Unit Registry</h2>
+          <span className="text-white/20 text-[10px] font-black uppercase tracking-widest">{filteredData.length} units</span>
+        </div>
+        {loading ? (
+           <div className="p-10 text-center animate-pulse text-white/20 font-black uppercase text-xs">Loading...</div>
+        ) : filteredData.length === 0 ? (
+           <div className="p-10 text-center text-white/10 font-black uppercase text-xs">No records found</div>
+        ) : filteredData.map((item) => (
+          <div key={item.id} className="bg-[#121212] border border-white/5 rounded-xl p-5 space-y-4 shadow-lg">
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="text-white font-black text-lg tracking-tight">{item.serial_id}</div>
+                <div className="text-[10px] text-white/40 font-bold uppercase mt-1">{item.floor} • {item.wing}</div>
+              </div>
+              <span className={`badge ${
+                item.status === 'OVERDUE' ? 'badge-overdue' :
+                item.status === 'UP TO DATE' ? 'badge-uptodate' :
+                'badge-duesoon'
+              }`}>
+                {item.status}
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 py-3 border-y border-white/5">
+              <div>
+                <div className="text-[8px] text-white/20 font-black uppercase tracking-[0.2em] mb-1">Type</div>
+                <div className="text-[10px] text-white/80 font-bold uppercase">{item.type}</div>
+              </div>
+              <div>
+                <div className="text-[8px] text-white/20 font-black uppercase tracking-[0.2em] mb-1">Location</div>
+                <div className="text-[10px] text-white/80 font-bold uppercase line-clamp-1">{item.location_detail}</div>
+              </div>
+              <div>
+                <div className="text-[8px] text-white/20 font-black uppercase tracking-[0.2em] mb-1">Last Refill</div>
+                <div className="text-[10px] text-white/60 font-mono font-bold">{item.last_refilled}</div>
+              </div>
+              <div>
+                <div className="text-[8px] text-white/20 font-black uppercase tracking-[0.2em] mb-1">Due Date</div>
+                <div className="text-[10px] text-red-500/80 font-mono font-bold">{item.due_date}</div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button onClick={() => handleRefill(item.id)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-green-500/5 text-green-500 border border-green-500/20 text-[9px] font-black uppercase tracking-widest hover:bg-green-500 hover:text-white transition-all">
+                <CheckCircle2 size={12} />
+                Refilled
+              </button>
+              <button onClick={() => openEditModal(item)} className="p-3 rounded-lg bg-blue-500/5 text-blue-400 border border-blue-400/20 hover:bg-blue-500 hover:text-white transition-all">
+                <Edit2 size={12} />
+              </button>
+              <button onClick={() => handleDelete(item.id)} className="p-3 rounded-lg bg-red-500/5 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all">
+                <Trash2 size={12} />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Modal */}
