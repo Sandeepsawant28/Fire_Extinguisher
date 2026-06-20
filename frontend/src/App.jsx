@@ -1,11 +1,153 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Papa from 'papaparse';
-import { Flame, Plus, Download, Search, Edit2, Trash2, CheckCircle2, AlertTriangle, ChevronDown, X } from 'lucide-react';
+import { Flame, Plus, Download, Search, Edit2, Trash2, CheckCircle2, AlertTriangle, ChevronDown, X, Delete } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+function LoginScreen({ onAuthenticate }) {
+  const [passcode, setPasscode] = useState('');
+  const [isError, setIsError] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key >= '0' && e.key <= '9') {
+        handleDigit(e.key);
+      } else if (e.key === 'Backspace') {
+        handleDelete();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [passcode]);
+
+  const handleDigit = (digit) => {
+    if (passcode.length < 4) {
+      const nextPasscode = passcode + digit;
+      setPasscode(nextPasscode);
+      if (nextPasscode.length === 4) {
+        verifyPasscode(nextPasscode);
+      }
+    }
+  };
+
+  const handleDelete = () => {
+    setPasscode(prev => prev.slice(0, -1));
+  };
+
+  const verifyPasscode = (code) => {
+    if (code === '0001') {
+      sessionStorage.setItem('unifire_auth', 'true');
+      setTimeout(() => {
+        onAuthenticate();
+      }, 300);
+    } else {
+      setShake(true);
+      setIsError(true);
+      setTimeout(() => {
+        setShake(false);
+        setPasscode('');
+        setIsError(false);
+      }, 600);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
+      <div className={`w-full max-w-md flex flex-col items-center text-center space-y-8 transition-transform ${shake ? 'animate-shake' : ''}`}>
+        {/* Logo and Header */}
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.5)]">
+            <Flame className="text-white w-10 h-10 animate-pulse" fill="currentColor" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black tracking-tighter uppercase italic text-white">
+              UNIFIRE REGISTRY
+            </h1>
+            <p className="text-white/40 text-[9px] tracking-[0.2em] font-black uppercase mt-1">
+              DON BOSCO COLLEGE OF ENGINEERING
+            </p>
+          </div>
+        </div>
+
+        {/* Status Prompt */}
+        <div className="space-y-2">
+          <h2 className={`text-sm font-black uppercase tracking-widest transition-colors duration-150 ${isError ? 'text-red-500' : 'text-white/60'}`}>
+            {isError ? 'Incorrect Passcode' : 'Enter Passcode'}
+          </h2>
+          <p className="text-[10px] text-white/20 font-bold uppercase tracking-wider">
+            Authorized Personnel Only
+          </p>
+        </div>
+
+        {/* Passcode dots */}
+        <div className="flex gap-6 justify-center py-4">
+          {[0, 1, 2, 3].map((index) => {
+            const hasValue = passcode.length > index;
+            return (
+              <div
+                key={index}
+                className={`w-4 h-4 rounded-full transition-all duration-150 border-2 ${
+                  isError
+                    ? 'bg-red-500 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'
+                    : hasValue
+                    ? 'bg-red-600 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)] scale-110'
+                    : 'bg-transparent border-white/20'
+                }`}
+              />
+            );
+          })}
+        </div>
+
+        {/* Numeric Keypad */}
+        <div className="grid grid-cols-3 gap-4 w-full max-w-[280px]">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+            <button
+              key={num}
+              type="button"
+              onClick={() => handleDigit(num.toString())}
+              className="w-16 h-16 rounded-full bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 active:scale-95 text-white font-mono text-xl font-bold transition-all duration-150 flex items-center justify-center focus:outline-none cursor-pointer"
+            >
+              {num}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPasscode('')}
+            className="w-16 h-16 rounded-full text-white/30 hover:text-white/60 active:scale-95 font-black text-[10px] transition-all duration-150 flex items-center justify-center uppercase tracking-widest focus:outline-none cursor-pointer"
+          >
+            Clear
+          </button>
+          <button
+            type="button"
+            onClick={() => handleDigit('0')}
+            className="w-16 h-16 rounded-full bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 active:scale-95 text-white font-mono text-xl font-bold transition-all duration-150 flex items-center justify-center focus:outline-none cursor-pointer"
+          >
+            0
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="w-16 h-16 rounded-full text-white/30 hover:text-white/60 active:scale-95 transition-all duration-150 flex items-center justify-center focus:outline-none cursor-pointer"
+          >
+            <Delete size={20} />
+          </button>
+        </div>
+
+        {/* Footer info */}
+        <div className="text-[9px] text-white/20 uppercase tracking-widest font-black pt-4">
+          Security Shield Active
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem('unifire_auth') === 'true';
+  });
   const [extinguishers, setExtinguishers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -133,6 +275,10 @@ function App() {
     item.location_detail.toLowerCase().includes(search.toLowerCase()) ||
     item.type.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (!isAuthenticated) {
+    return <LoginScreen onAuthenticate={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div className="min-h-screen p-3 sm:p-8 max-w-7xl mx-auto font-sans">
